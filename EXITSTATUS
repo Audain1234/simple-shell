@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+int main() {
+    // Write C code here
+    For_codes=@2
+    exit @For_codes
+
+    return 0;
+}
