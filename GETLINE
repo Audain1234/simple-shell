@@ -1,0 +1,36 @@
+#include <unistd.h>
+
+#define BUFFER_SIZE 4096
+
+char* my_getline() {
+    static char buffer[BUFFER_SIZE];
+    static size_t buffer_pos = 0;
+    static size_t buffer_size = 0;
+
+    if (buffer_pos >= buffer_size) {
+        buffer_size = read(STDIN_FILENO, buffer, BUFFER_SIZE);
+        buffer_pos = 0;
+
+        if (buffer_size <= 0)
+            return NULL;
+    }
+
+    size_t newline_pos = buffer_pos;
+    while (newline_pos < buffer_size && buffer[newline_pos] != '\n')
+        newline_pos++;
+
+    size_t line_length = newline_pos - buffer_pos;
+
+    char* line = (char*)malloc((line_length + 1) * sizeof(char));
+    if (!line)
+        return NULL;  
+
+    for (size_t i = 0; i < line_length; i++)
+        line[i] = buffer[buffer_pos + i];
+    line[line_length] = '\0'; 
+
+    buffer_pos = newline_pos + 1;  
+
+    return line;
+}
+
