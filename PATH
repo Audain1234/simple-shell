@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main() {
+   
+    char* path = getenv("PATH");
+
+    char command[] = "ls";
+
+    char fullCommand[256];
+    snprintf(fullCommand, sizeof(fullCommand), "%s/%s", path, command);
+
+    if (access(fullCommand, F_OK) == 0) {
+        
+        printf("Command exists: %s\n", fullCommand);
+       
+    } else {
+       
+        printf("Command does not exist: %s\n", fullCommand);
+
+    }
+
+
+    return 0;
+}
+
