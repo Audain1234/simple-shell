@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void tokenizeString(const char* str, char delimiter) {
+    char* token;
+    char* copy = strdup(str);
+
+    token = strtok(copy, &delimiter);
+    while (token != NULL) {
+        printf("%s\n", token);
+        token = strtok(NULL, &delimiter);
+    }
+
+    free(copy);
+}
+
+int main() {
+    char input[] = "Hello, world! This is a sample string.";
+    char delimiter = ' ';
+
+    tokenizeString(input, delimiter);
+
+    return 0;
+}
+
