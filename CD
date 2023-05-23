@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+void change_directory(const char* directory) {
+    char previous_directory[1024];
+    if (getcwd(previous_directory, sizeof(previous_directory)) == NULL) {
+        perror("cd");
+        return;
+    }
+
+    if (directory == NULL || strcmp(directory, "") == 0) {
+        // If no argument is given, change to the home directory
+        directory = getenv("HOME");
+        if (directory == NULL) {
+            fprintf(stderr, "cd: $HOME not set\n");
+            return;
+        }
+    } else if (strcmp(directory, "-") == 0) {
+        // If the argument is '-', change to the previous directory
+        directory = getenv("OLDPWD");
+        if (directory == NULL) {
+            fprintf(stderr, "cd: OLDPWD not set\n");
+            return;
+        }
+        printf("%s\n", directory);
+    }
+
+    if (chdir(directory) != 0) {
+        perror("cd");
+        return;
+    }
+
+    // Update the PWD environment variable
+    if (setenv("OLDPWD", previous_directory, 1) != 0) {
+        perror("cd");
+        return;
+    }
+    if (setenv("PWD", getcwd(NULL, 0), 1) != 0) {
+        perror("cd");
+        return;
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc > 2) {
+        fprintf(stderr, "Usage: cd [DIRECTORY]\n");
+        return 1;
+    }
+
+    const char* directory = (argc == 1) ? "" : argv[1];
+    change_directory(directory);
+
+    return 0;
+}
+
