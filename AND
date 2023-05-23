@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main() {
+    int a = 29;
+    int b = 13;
+    int c = 8;
+
+    if (a > b && a > c) {
+        printf("a is the largest number.\n");
+    } else if (b > a && b > c) {
+        printf("b is the largest number.\n");
+    } else {
+        printf("c is the largest number.\n");
+    }
+
+    if (a > b || a > c) {
+        printf("a is greater than either b or c.\n");
+    }
+
+    if (b > a || b > c) {
+        printf("b is greater than either a or c.\n");
+    }
+
+    return 0;
+}
+
