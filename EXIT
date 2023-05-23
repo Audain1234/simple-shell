@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void exit_shell() {
+    printf("Exiting the shell...\n");
+    exit(0);
+}
+
+int main() {
+    char command[100];
+    
+    printf("Enter a command: ");
+    fgets(command, sizeof(command), stdin);
+    
+    if (strcmp(command, "exit\n") == 0) {
+        exit_shell();
+    } else {
+      
+    }
+    
+    return 0;
+}
+
