@@ -1,0 +1,13 @@
+#include <stdio.h>
+
+int main(int number, char *argv[]){
+
+    printf("Number of arguments: %d\n", number);
+
+    for (int i = 0; i < number; i++) {
+        printf("Argument %d: %s\n", i, argv[i]);
+    }
+
+    return 0;
+}
+
