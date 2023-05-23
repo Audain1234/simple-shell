@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int setenv(const char *name, const char *value, int overwrite) {
+    if (name == NULL || value == NULL) {
+        fprintf(stderr, "setenv: Invalid arguments\n");
+        return -1;
+    }
+
+    if (!overwrite && getenv(name) != NULL) {
+        fprintf(stderr, "setenv: Variable '%s' already exists\n", name);
+        return -1;
+    }
+
+    // Calculate the length of the new environment variable string
+    size_t name_length = strlen(name);
+    size_t value_length = strlen(value);
+    size_t total_length = name_length + value_length + 2;
+
+    // Allocate memory for the new environment variable string
+    char *new_env = malloc(total_length);
+    if (new_env == NULL) {
+        fprintf(stderr, "setenv: Memory allocation failed\n");
+        return -1;
+    }
+
+    // Construct the new environment variable string as "NAME=VALUE"
+    strncpy(new_env, name, name_length);
+    new_env[name_length] = '=';
+    strncpy(new_env + name_length + 1, value, value_length);
+    new_env[total_length - 1] = '\0';
+
+    // Set the new environment variable using putenv
+    if (putenv(new_env) != 0) {
+        fprintf(stderr, "setenv: Failed to set the variable '%s'\n", name);
+        free(new_env);
+        return -1;
+    }
+
+    return 0;
+}
+
+int unsetenv(const char *name) {
+    if (name == NULL) {
+        fprintf(stderr, "unsetenv: Invalid argument\n");
+        return -1;
+    }
+
+    if (getenv(name) == NULL) {
+        fprintf(stderr, "unsetenv: Variable '%s' does not exist\n", name);
+        return -1;
+    }
+
+    // Construct the environment variable string as "NAME="
+    size_t name_length = strlen(name);
+    size_t total_length = name_length + 2;
+
+    char *unset_str = malloc(total_length);
+    if (unset_str == NULL) {
+        fprintf(stderr, "unsetenv: Memory allocation failed\n");
+        return -1;
+    }
+
+    strncpy(unset_str, name, name_length);
+    unset_str[name_length] = '=';
+    unset_str[total_length - 1] = '\0';
+
+    // Unset the environment variable using putenv
+    if (putenv(unset_str) != 0) {
+        fprintf(stderr, "unsetenv: Failed to unset the variable '%s'\n", name);
+        free(unset_str);
+        return -1;
+    }
+
+    free(unset_str);
+    return 0;
+}
+
